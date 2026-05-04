@@ -3,7 +3,7 @@ name: Publish Pacman Repo
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # lets you trigger it manually from GitHub
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,8 +19,6 @@ jobs:
       - name: Build repo database
         run: |
           mkdir -p repo
-          # If you have packages, copy them here later
-          # cp packages/*.pkg.tar.zst repo/ 2>/dev/null || true
           cd repo
           repo-add poagos-pmrepo.db.tar.gz || true
 
@@ -28,10 +26,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd repo
           gh release delete latest --yes 2>/dev/null || true
           gh release create latest \
-            poagos-pmrepo.db.tar.gz \
-            poagos-pmrepo.files.tar.gz \
+            repo/poagos-pmrepo.db.tar.gz \
+            repo/poagos-pmrepo.files.tar.gz \
             --title "Latest" \
             --notes "Auto-published"
