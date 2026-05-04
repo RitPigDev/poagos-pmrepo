@@ -26,9 +26,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release delete latest --yes 2>/dev/null || true
+          gh release delete latest --yes --repo ${{ github.repository }} 2>/dev/null || true
           gh release create latest \
             repo/poagos-pmrepo.db.tar.gz \
             repo/poagos-pmrepo.files.tar.gz \
             --title "Latest" \
-            --notes "Auto-published"
+            --notes "Auto-published" \
+            --repo ${{ github.repository }}
